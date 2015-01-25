@@ -1,0 +1,100 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+A basic Polymer element to help Jason understand Polymer elements
+
+#### Demos
+
+<a href='./app-main.html'>Two sliders bound together</a>
+
+#### Examples
+
+
+<div class="ntitle">Usage</div>
+
+<jason-slider></jason-slider>
+
+<div class="ntitle">Styling</div>
+
+Do as you wish.
+
+
+@element jason-slider
+@blurb A basic Polymer element to help Jason understand Polymer elements
+@status alpha
+@homepage http://github.com/JonDum/jason-slider
+-->
+  <polymer-element name='jason-slider'>
+       <template>
+        <div>
+          {{min}}
+          <input type='range' value="{{value}}" min="{{min}}" max="{{max}}">
+          {{max}}
+          Current value: {{ value }} 
+        </div>
+        <div>
+          
+        </div>
+      
+       </template>
+       <script>
+         Polymer({
+           
+           publish: {
+             /**
+              * The `min` attribute defines the minimum value
+              *
+              * @attribute min
+              * @type number
+              */
+              min: 0,
+             /**
+              * The `max` attribute defines the maximum value
+              *
+              * @attribute max
+              * @type fill
+              */
+              max: 100,
+             /**
+              * The `value` attribute defines the value
+              *
+              * @attribute value
+              * @type number
+              */
+              value: 50
+           },
+           
+             /**
+              * The `sliderPosition` returns the current position of the slider as a percentage
+              *
+              * @property sliderPosition
+              * @type number
+              */
+           get sliderPosition() {
+             return (this.min + this.value)/this.max/100;
+           }, 
+           
+           
+            /**
+             * Called when the value of the slider changes
+             *
+             * @event change
+             */
+           valueChanged: function() {
+             this.fire('change', {value: this.value});
+           },
+           
+        /**
+         * Set the slider to the minimum value
+         *
+         * @method setToMinimum
+         */
+           setToMinimum: function() {
+             this.value = this.min;
+           }
+           
+         })
+       </script>
+  </polymer-element>
+  
+  

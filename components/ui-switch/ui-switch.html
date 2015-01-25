@@ -1,0 +1,128 @@
+<!--
+
+	file-name       : ui-switch
+	project-name    : ui-elements
+	
+	Created by SS Virk on 20 Jan, 2015.
+	Copyright (c) 2014, J2 Innovation Inc. All Rights Reserved
+	
+-->
+
+<polymer-element name="ui-switch" extends="ui-element" class="horizontal middle">
+	<template>
+		<style>
+		/*
+			
+				file-name       : ui-switch
+				project-name    : ui-elements
+				
+				Created by SS Virk on 20 Jan, 2015.
+				Copyright (c) 2014, J2 Innovation Inc. All Rights Reserved
+				
+			*/
+			/*:host.toggled /deep/ #offIndicator,
+			:host.toggled /deep/ #onIndicator
+				background-color #c0c0c0
+				background-color #44CC66
+			
+			:host.toggled /deep/ #toggle
+				right 0.5em !important*/
+			#mains {
+			  position: relative;
+			  height: 2em;
+			  cursor: pointer;
+			  border-radius: 1.5em;
+			  transition: 350ms;
+			  background: linear-gradient(rgba(0,0,0,0.07), rgba(255,255,255,0)), #ddd;
+			  box-shadow: 0 0.07em 0.1em -0.1em rgba(0,0,0,0.4) inset, 0 0.05em 0.08em -0.01em rgba(255,255,255,0.7);
+			  margin: 0 5px 0 5px;
+			}
+			#toggle {
+			  position: absolute;
+			  width: 2em;
+			  height: 2em;
+			  top: 0.4em;
+			  left: 0.5em;
+			  border-radius: 50%;
+			  border: none;
+			  cursor: inherit;
+			  outline: none;
+			  transition: 250ms ease-in-out;
+			  background: linear-gradient(#f5f5f5 10%, #eee);
+			  box-shadow: 0 0.1em 0.15em -0.05em rgba(255,255,255,0.9) inset, 0 0.4em 0.3em -0.1em rgba(0,0,0,0.25);
+			}
+			#toggle.checked {
+			  left: 3.5em;
+			}
+			#offIndicator {
+			  width: 0.5em;
+			  height: 0.5em;
+			  border-radius: 50%;
+			  transition: 100ms ease-in;
+			  background: linear-gradient(rgba(0,0,0,0.07), rgba(255,255,255,0.1)), #d89797;
+			  box-shadow: 0 0.08em 0.15em -0.1em rgba(0,0,0,0.5) inset, 0 0.05em 0.08em -0.01em rgba(255,255,255,0.7);
+			}
+			#offIndicator.checked {
+			  background-color: #c0c0c0;
+			}
+			#onIndicator {
+			  width: 1em;
+			  height: 1em;
+			  border-radius: 50%;
+			  transition: 100ms ease-in;
+			  background: linear-gradient(rgba(0,0,0,0.07), rgba(255,255,255,0.1)), #ddd;
+			  box-shadow: 0 0.08em 0.15em -0.1em rgba(0,0,0,0.5) inset, 0 0.05em 0.08em -0.01em rgba(255,255,255,0.7);
+			}
+			#onIndicator.checked {
+			  background-color: #4c6;
+			}
+			</style>
+
+		<div id="offIndicator" class="{{checked ? 'checked' : ''}}"></div>
+		<div id="mains" class="elastic x1" on-click="{{toggleSwitch}}">
+			<button id="toggle" class="{{checked ? 'checked' : ''}}"></button>
+		</div>
+		<div id="onIndicator" class="{{checked ? 'checked' : ''}}"></div>
+	</template>
+	<script>
+		/**
+		
+		 file-name       : ui-switch
+		 project-name    : ui-elements
+		
+		 Created by SS Virk on 20 Jan, 2015.
+		 Copyright (c) 2014, J2 Innovation Inc. All Rights Reserved
+		
+		 */
+		
+		
+		
+		
+		var ek  = require("constants/j2-events");
+		
+		Polymer("ui-switch", {
+		
+			publish : {
+				checked : false
+				//  on color and off color
+			},
+		
+			toggleSwitch : function()
+			{
+				this.checked    = !this.checked;
+		
+				this.fire(ek.CHANGE);
+			},
+		
+			ready: function ()
+			{
+				this.width = 100;
+				this.height = 32;
+		
+				this.super();
+			}
+		
+		});
+		</script>
+
+</polymer-element>

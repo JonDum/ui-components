@@ -1,0 +1,39 @@
+    
+    <link rel='import' href="jason-slider.html">
+    
+    <polymer-element name='app-main'>
+      <template>
+        
+        Hello!
+        
+        <jason-slider id='firstSlider' value={{value}}></jason-slider>
+        
+        <jason-slider id='secondSlider' value={{value2}} on-change="{{customChangeHandler}}"></jason-slider>
+
+        <button on-click="{{setMin}}">Set sliders to min</button>
+
+      </template>
+      <script>
+        Polymer({
+          
+          value: 50,
+          
+          valueChanged: function() {
+             this.value2 = this.value;
+          },
+          
+          customChangeHandler: function(e) {
+            console.log('customChangeHandler(): value = ', e.detail.value);
+          },
+          
+          setMin: function() {
+            
+            // because value2 is updated when value changes,
+            // calling this method propagates firstSlider's value
+            // to secondSlider again
+            this.$.firstSlider.setToMinimum();
+          }
+      
+        });
+      </script>
+    </polymer-element>

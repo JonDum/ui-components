@@ -1,0 +1,160 @@
+<!--
+
+	file-name       : ui-slider
+	project-name    : ui-elements
+	
+	Created by SS Virk on 20 Jan, 2015.
+	Copyright (c) 2014, J2 Innovation Inc. All Rights Reserved
+	
+-->
+
+<polymer-element name="ui-slider" extends="ui-input" class="horizontal middle">
+	<template>
+		<style>
+		/*
+			
+				file-name       : ui-slider
+				project-name    : ui-elements
+				
+				Created by SS Virk on 20 Jan, 2015.
+				Copyright (c) 2014, J2 Innovation Inc. All Rights Reserved
+				
+			*/
+			#view {
+			  width: 100%;
+			  height: 100%;
+			  position: relative;
+			}
+			#track {
+			  position: absolute;
+			  height: 4px;
+			  margin-top: -2px;
+			  top: 50%;
+			  left: 0;
+			  right: 0;
+			  background: linear-gradient(rgba(0,0,0,0.07), rgba(255,255,255,0)), #d0d0d0;
+			  box-shadow: 0 1px 0 0 rgba(0,0,0,0.2) inset, 0 1px 0 0 #fff;
+			}
+			#thumbContainer {
+			  position: absolute;
+			  height: 100%;
+			  left: 0;
+			  right: 18px;
+			}
+			#thumb {
+			  position: absolute;
+			  width: 18px;
+			  height: 18px;
+			  border-radius: 50%;
+			  border: none;
+			  outline: none;
+			  box-shadow: 0 0 1px 0 rgba(0,0,0,0.8);
+			  background: linear-gradient(to bottom, #fefefe, #e0e0e0);
+			}
+			#thumb:hover {
+			  background: linear-gradient(to bottom, #fff, #efefef);
+			}
+			</style>
+
+		<div id="view" on-mousedown="{{trackMouseDownHandler}}">
+			<div id="track"></div>
+			<div id="thumbContainer">
+				<button id="thumb" style="left: {{(value/(max - min)) * 100}}%"
+						on-mousedown="{{thumbMouseDownHandler}}"></button>
+			</div>
+		</div>
+	</template>
+	<script>
+		/**
+		
+		 file-name       : ui-slider
+		 project-name    : ui-elements
+		
+		 Created by SS Virk on 20 Jan, 2015.
+		 Copyright (c) 2014, J2 Innovation Inc. All Rights Reserved
+		
+		 */
+		
+		
+		var k   = 
+		var K   = new k();
+		var e   = require("constants/j2-events");
+		var E   = new e();
+		
+		Polymer("ui-slider", {
+		
+			publish : {
+		
+				enableLiveChange : false
+		
+			},
+		
+			initialValue: 0,
+			initialX    : 0,
+		
+			trackMouseDownHandler : function(event, detail, sender)
+			{
+				var rect    = sender.getBoundingClientRect();
+				var offX    = event.clientX - rect.left;
+				var ratio   = offX / rect.width;
+				this.value  = this.allowFloatingPoint ? ratio * this.max : Math.floor(ratio * this.max);
+		
+				this.fire(E.CHANGE);
+			},
+		
+			thumbMouseDownHandler : function(event, detail, sender)
+			{
+				event.stopImmediatePropagation();
+				event.stopPropagation();
+		
+				var rect            = sender.getBoundingClientRect();
+				this.initialValue   = this.value;
+				this.initialX       = event.clientX - rect.left;
+		
+				document.addEventListener("mousemove",  this);
+				document.addEventListener("mouseup",    this);
+			},
+		
+		
+			handleEvent : function(event)
+			{
+				if (event.type == "mouseup")
+				{
+					document.removeEventListener("mousemove",  this);
+					document.removeEventListener("mouseup",    this);
+		
+					if (this.initialValue != this.value)
+						this.fire(E.CHANGE);
+		
+					return;
+				}
+		
+				var rect    = event.target.getBoundingClientRect();
+				var cX      = event.clientX - rect.left;
+				var ratio   = (this.initialX + (cX - this.initialX)) / this.width;
+				var fX      = this.allowFloatingPoint ? ratio * this.max : Math.floor(ratio * this.max);
+		
+				if (fX < this.min)
+					fX  = this.min;
+				else if (fX > this.max)
+					fX  = this.max;
+		
+				this.value  = fX;
+		
+				if (this.enableLiveChange)
+					this.fire(E.CHANGE);
+			},
+		
+		
+			ready: function ()
+			{
+				this.height         = 18;
+				this.$.input.type   = K.INPUT_RANGE;
+				this.type           = K.INPUT_RANGE;
+		
+				this.super();
+			}
+		
+		});</script>
+
+</polymer-element>

@@ -1,0 +1,302 @@
+<!--
+
+	file-name       : ui-datetime
+	project-name    : ui-elements
+	
+	Created by SS Virk on 21 Jan, 2015.
+	Copyright (c) 2014, J2 Innovation Inc. All Rights Reserved
+	
+-->
+
+<polymer-element name="ui-datetime" extends="ui-element" class="horizontal middle">
+
+	<template>
+		<style>
+		/*
+			
+				file-name       : ui-datetime
+				project-name    : ui-elements
+				
+				Created by SS Virk on 21 Jan, 2015.
+				Copyright (c) 2014, J2 Innovation Inc. All Rights Reserved
+				
+			*/
+			:host {
+			  border: 1px solid #cbcbcb;
+			  background-color: #fff;
+			}
+			input {
+			  border: none;
+			  background: none;
+			  text-align: center;
+			  outline: none;
+			}
+			span {
+			  color: #a0a0a0;
+			}
+			#popupToggle {
+			  height: 100%;
+			  width: 25px;
+			  position: relative;
+			  background-image: linear-gradient(to bottom, rgba(255,255,255,0.1), rgba(0,0,0,0.1));
+			  box-shadow: inset 0 1px 0 0 #f5f5f5;
+			  background-color: #eaeaea;
+			  border-left: 1px solid #cbcbcb;
+			}
+			#popupToggle:hover {
+			  background-color: #fafafa;
+			}
+			#popupToggle:active,
+			#popupToggle.toggled {
+			  background-color: #e0e0e0;
+			  background-image: none;
+			  box-shadow: none;
+			}
+			#icon-container {
+			  width: 100%;
+			  height: 100%;
+			}
+			*[icon] {
+			  width: 18px;
+			  height: 18px;
+			  color: text-color;
+			}
+			#popup {
+			  min-width: 250px;
+			  position: absolute;
+			  top: 100%;
+			  right: 0;
+			  margin-top: 2px;
+			}
+			#popup ul {
+			  list-style: none;
+			  padding: 5px 0 5px 0;
+			  margin: 0;
+			  font-family: sans-serif;
+			  font-size: 10px;
+			  border-bottom: 1px solid separator-color;
+			  -webkit-user-select: none;
+			  -moz-user-select: none;
+			  -ms-user-select: none;
+			  user-select: none;
+			}
+			#popup ul li {
+			  cursor: default;
+			}
+			.headerGroup {
+			  cursor: pointer;
+			  color: text-color;
+			}
+			.headerGroup span {
+			  color: text-color;
+			  -webkit-user-select: none;
+			  -moz-user-select: none;
+			  -ms-user-select: none;
+			  user-select: none;
+			}
+			.headerGroup span:last-child {
+			  color: theme-color;
+			}
+			.headerContainer {
+			  padding: 0 5px 0 5px;
+			  border-bottom: 1px solid separator-color;
+			}
+			.calendarContainer {
+			  padding: 5px;
+			}
+			table {
+			  font-family: sans-serif;
+			  font-size: 12px;
+			  border-collapse: collapse;
+			  -webkit-user-select: none;
+			  -moz-user-select: none;
+			  -ms-user-select: none;
+			  user-select: none;
+			}
+			table.calendar td {
+			  width: 40px;
+			  height: 30px;
+			  text-align: center;
+			  font-family: monospace;
+			  border-radius: 4px;
+			  cursor: default;
+			}
+			table.calendar td.offRange {
+			  opacity: 0.4;
+			}
+			table.calendar td.current {
+			  background-color: theme-color;
+			  color: selection-color;
+			}
+			table.calendar td:hover {
+			  background-color: accent-color;
+			}
+			table.calendar td.disabled {
+			  pointer-events: none;
+			}
+			table.daysHeader td {
+			  padding: 5px 0 5px 0;
+			  min-width: 40px;
+			  text-align: center;
+			}
+			</style>
+
+		<input type="text" class="elastic x1" placeholder="MM" id="month" style="display: {{_hasMonth ? 'block' : 'none'}};">
+		<span id="mD" style="display: {{_hasMonth &amp;&amp; _hasDate ? 'block' : 'none'}}">/</span>
+		<input type="text" class="elastic x1" placeholder="DD" id="date" style="display: {{_hasDate ? 'block' : 'none'}};">
+		<span id="dY" style="display: {{_hasDate &amp;&amp; _hasYear ? 'block' : 'none'}}">/</span>
+		<input type="text" class="elastic x1" placeholder="YYYY" id="year" style="display: {{_hasDate ? 'block' : 'none'}};">
+
+		<span id="amp" style="display: {{_hasDateAndTime ? 'block' : 'none'}};">@</span>
+
+		<input type="text" class="elastic x1" placeholder="hh" id="hrs" style="display: {{_hasHrs ? 'block' : 'none'}};">
+		<span id="hM" style="display: {{_hasHrs &amp;&amp; _hasMins ? 'block' : 'none'}}">:</span>
+		<input type="text" class="elastic x1" placeholder="mm" id="mins" style="display: {{_hasMins ? 'block' : 'none'}};">
+		<span id="mS" style="display: {{_hasMins &amp;&amp; _hasSecs ? 'block' : 'none'}}">:</span>
+		<input type="text" class="elastic x1" placeholder="ss" id="secs" style="display: {{_hasSecs ? 'block' : 'none'}};">
+
+		<a id="popupToggle" class="{{isOpen ? 'toggled' : ''}}">
+			<div id="icon-container" class="horizontal center middle" on-mousedown="{{togglePopup}}">
+				<core-icon icon="event"></core-icon>
+			</div>
+			<div class="vertical popup" id="popup"
+				 style="display: {{isOpen ? 'block' : 'none'}}">
+				<header class="horizontal center middle">
+					<core-icon-button icon="chevron-left"></core-icon-button>
+					<div class="elastic x1"></div>
+					<div class="headerGroup">
+						<span id="mthHeader">JAN</span>
+						<span id="yrHeader">2015</span>
+					</div>
+					<div class="elastic x1"></div>
+					<core-icon-button icon="chevron-right"></core-icon-button>
+				</header>
+				<div class="headerContainer">
+					<table class="daysHeader">
+						<tr>
+							<td>SUN</td>
+							<td>MON</td>
+							<td>TUE</td>
+							<td>WED</td>
+							<td>THU</td>
+							<td>FRI</td>
+							<td>SAT</td>
+						</tr>
+					</table>
+				</div>
+				<div class="calendarContainer">
+					<table class="calendar">
+						<template repeat="{{rows in _dates}}">
+							<tr>
+								<template repeat="{{col in rows}}">
+									<td class="{{!col.selectable ? 'disabled' : (!col.inRange ? 'offRange' : (col.current ? 'current' : ''))}}">{{col.display}}</td>
+								</template>
+	<script>
+		/**
+		
+		 file-name       : ui-datetime
+		 project-name    : ui-elements
+		
+		 Created by SS Virk on 21 Jan, 2015.
+		 Copyright (c) 2014, J2 Innovation Inc. All Rights Reserved
+		
+		 */
+		
+		
+		
+		var M   = require("moment");
+		var du  = require("utils/dateUtil");
+		var DU  = new du();
+		
+		Polymer("ui-datetime", {
+		
+			publish : {
+		
+				dateOptions  : 'ymd',
+				timeOptions  : 'hm',
+				isOpen       : false,
+				//
+				selectionType: "date"
+			},
+		
+			_dates   : [],
+			_hasMonth: false,
+			_hasDate : false,
+			_hasYear : false,
+			_hasHrs  : false,
+			_hasMins : false,
+			_hasSecs : false,
+			_hasDateAndTime : false,
+		
+		
+			togglePopup : function()
+			{
+				this.isOpen = !this.isOpen;
+			},
+		
+		
+			ready: function ()
+			{
+				var d   = this.dateOptions.toLowerCase();
+				var t   = this.timeOptions.toLowerCase();
+		
+				this._hasMonth  = d.indexOf("m") != -1;
+				this._hasDate   = d.indexOf("d") != -1;
+				this._hasYear   = d.indexOf("y") != -1;
+				this._hasHrs    = t.indexOf("h") != -1;
+				this._hasMins   = t.indexOf("m") != -1;
+				this._hasSecs   = t.indexOf("s") != -1;
+				this._hasDateAndTime    = d != "" && t != "";
+		
+				this.super();
+		
+				//  get the date data ready
+				var now     = new Date();
+				var end     = new Date();
+				var ref     = new Date();
+				var count   = 0;
+		
+				now.setDate(1);
+				end.setDate(DU.DaysInTheMonth(end.getMonth(), end.getFullYear()));
+		
+				var cDay    = now.getDay();
+				var delta   = cDay * 86400 * 1000;
+				var eDay    = 6 - end.getDay();
+				var eDelta  = eDay * 86400 * 1000;
+		
+				//  set the date to the beginning of the week
+				//  and the end date to the end of the proper week
+				now.setTime(now.getTime() - delta);
+				end.setTime(end.getTime() + eDelta);
+		
+				var allRows = [];
+				var row     = [];
+				while (now.getTime() <= end.getTime())
+				{
+					if (count != 0 && count % 7 == 0)
+					{
+						allRows.push(row);
+						row = [];
+					}
+					var nDate   = DU.CloneDate(now);
+					var current = M(now).isSame(ref);
+					row.push({date: nDate, inRange: now.getMonth() == ref.getMonth(), selectable: true, display: M(nDate).format('DD'), current:current});
+					now.setDate(now.getDate() + 1);
+					count++;
+				}
+				allRows.push(row);
+				this._dates  = allRows;
+				console.log(this.dates);
+			}
+		
+		});</script>
+
+							</tr>
+						</template>
+					</table>
+				</div>
+			</div>
+		</a>
+	</template>
+
+</polymer-element>
